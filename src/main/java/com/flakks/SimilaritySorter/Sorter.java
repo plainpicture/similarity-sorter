@@ -93,12 +93,13 @@ public class Sorter {
             scores.set(i, Math.log(total / scores.get(i)) + 1.0);
 
         sort(docs, scores);
-                
-        int max = Math.min(docs.size(), (int)size);
 
         hits.clear();
 
-        for(i = (int)(from - newFrom); i < max; i++)
+        int start = (int)(from - newFrom);
+        int stop = start + Math.min(docs.size(), (int)size);
+
+        for(i = start; i < stop; i++)
             hits.add(docs.get(i).getDoc());
     }
 }
