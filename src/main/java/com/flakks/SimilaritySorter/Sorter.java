@@ -97,7 +97,7 @@ public class Sorter {
         hits.clear();
 
         int start = (int)(from - newFrom);
-        int stop = start + Math.min(docs.size(), (int)size);
+        int stop = Math.min(docs.size(), start + (int)size);
 
         for(i = start; i < stop; i++)
             hits.add(docs.get(i).getDoc());
