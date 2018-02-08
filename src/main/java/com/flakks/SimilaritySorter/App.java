@@ -45,6 +45,7 @@ public class App extends AbstractHandler {
             jsonRequest.remove("similarity");
 
             HttpResponse<String> unirestResponse = Unirest.post(((String)similarity.get("base_url")) + request.getRequestURI())
+                    .header("content-type", "application/json; charset=utf-8")
                     .header("accept", "application/json")
                     .body(jsonRequest.toString())
                     .asString();
