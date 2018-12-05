@@ -74,7 +74,7 @@ public class App extends AbstractHandler {
             httpServletResponse.getWriter().print(jsonResponse.toString());
             request.setHandled(true);
         } catch(ParseException | UnirestException e) {
-            // Nothing
+            e.printStackTrace();
         }        
     }
 }
