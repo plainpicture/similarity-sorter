@@ -41,17 +41,17 @@ public class Sorter {
             docs.set(maxIndex, oldDocument);
         }
     }
-    
+
     private Object getSourceField(JSONObject source, String[] path) {
         Object res = source;
         int i;
-        
+
         for(i = 0; i < path.length; i++)
             res = ((JSONObject)res).get(path[i]);
-        
+
         return res;
     }
-    
+
     public void sort(JSONObject jsonResponse, String field, long from, long newFrom, long size) {
         JSONArray hits = (JSONArray)((JSONObject)jsonResponse.get("hits")).get("hits");
 

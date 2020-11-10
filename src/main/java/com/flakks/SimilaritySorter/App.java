@@ -23,23 +23,23 @@ public class App extends AbstractHandler {
         server.start();
         server.join();
     }
-    
+
     @Override
     public void handle(String target, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
         try {
             long t1, t2;
- 
+
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonRequest = (JSONObject)jsonParser.parse(request.getReader());
-            
+
             long from = (Long)jsonRequest.get("from");
             long size = (Long)jsonRequest.get("size");
-            
+
             JSONObject similarity = (JSONObject)jsonRequest.get("similarity");
             long window = (Long)similarity.get("window");
-            
+
             long newFrom = (from / window) * window;
-            
+
             jsonRequest.put("from", newFrom);
             jsonRequest.put("size", window);
             jsonRequest.remove("similarity");
@@ -49,32 +49,32 @@ public class App extends AbstractHandler {
                     .header("accept", "application/json")
                     .body(jsonRequest.toString())
                     .asString();
-            
+
             httpServletResponse.setStatus(unirestResponse.getStatus());
             httpServletResponse.setCharacterEncoding("utf-8");
-            
+
             if(unirestResponse.getStatus() < 200 || unirestResponse.getStatus() > 299) {
                 httpServletResponse.getWriter().print(unirestResponse.getBody());
                 request.setHandled(true);
-                
+
                 return;
             }
-            
+
             JSONObject jsonResponse = (JSONObject)jsonParser.parse(unirestResponse.getBody());
-            
+
             t1 = new Date().getTime();
-            
+
             new Sorter().sort(jsonResponse, (String)similarity.get("field"), from, newFrom, size);
 
             t2 = new Date().getTime();
-                        
+
             jsonResponse.put("took", ((Long)jsonResponse.get("took")) + (t2 - t1));
-            
+
             httpServletResponse.setContentType("application/json");
             httpServletResponse.getWriter().print(jsonResponse.toString());
             request.setHandled(true);
         } catch(ParseException | UnirestException e) {
             e.printStackTrace();
-        }        
+        }
     }
 }
